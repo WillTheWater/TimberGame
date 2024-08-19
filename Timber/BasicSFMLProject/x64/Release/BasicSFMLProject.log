@@ -1,17 +1,2 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (BasicSFMLProject.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  main.cpp
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(165,31): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(167,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(180,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(182,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(195,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(197,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(210,27): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(212,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Dev\PacktProjects\Timber\BasicSFMLProject\main.cpp(227,18): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-  Generating code
-  3 of 130 functions ( 2.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  BasicSFMLProject.vcxproj -> C:\Dev\PacktProjects\Timber\x64\Release\Timber.exe
+LINK : fatal error LNK1104: cannot open file 'C:\Dev\PacktProjects\Timber\x64\Release\Timber.exe'

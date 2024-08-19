@@ -1,4 +1,5 @@
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include <sstream>
 
 void UpdateBranches(int seed);
@@ -135,13 +136,72 @@ int main()
 	float logSpeedX = 1000;
 	float logSpeedY = -1500;
 	//-------------------------------
+	//------------Input--------------
+	bool acceptInput = false;
+	//-------------------------------
+	//-----------Sound---------------
+	sf::SoundBuffer chopBuffer;
+	chopBuffer.loadFromFile("assets/sound/chop.wav");
+	sf::Sound chop;
+	chop.setBuffer(chopBuffer);
+	sf::SoundBuffer deathBuffer;
+	deathBuffer.loadFromFile("assets/sound/death.wav");
+	sf::Sound death;
+	death.setBuffer(deathBuffer);
+	sf::SoundBuffer ootBuffer;
+	ootBuffer.loadFromFile("assets/sound/out_of_time.wav");
+	sf::Sound oot;
+	oot.setBuffer(ootBuffer);
 
 	while (window.isOpen())
 	{
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) { window.close(); }
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) { paused = false; score = 0; timeRemaining = 5; }
+			if (event.type == sf::Event::KeyReleased && !paused)
+			{
+				acceptInput = true;
+				spriteAxe.setPosition(2000, spriteAxe.getPosition().y);
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) 
+			{ 
+				paused = false; score = 0; timeRemaining = 5;
+				for (int i = 1; i < NUM_BRANCHES; i++) { branchPositions[i] = side::NONE; }
+				spriteGrave.setPosition(675, 2000);
+				spritePlayer.setPosition(580, 720);
+				acceptInput = true;
+			}
+			if (acceptInput)
+			{
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+				{
+					playerSide = side::RIGHT;
+					score++;
+					timeRemaining += (2.f / score) + 0.15f;
+					spriteAxe.setPosition(AXE_POSITION_RIGHT, spriteAxe.getPosition().y);
+					spritePlayer.setPosition(1200, 720);
+					UpdateBranches(score);
+					spriteLog.setPosition(810, 720);
+					logSpeedX = -5000;
+					logActive = true;
+					acceptInput = false;
+					chop.play();
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+				{
+					playerSide = side::LEFT;
+					score++;
+					timeRemaining += (2.f / score) + 0.15f;
+					spriteAxe.setPosition(AXE_POSITION_LEFT, spriteAxe.getPosition().y);
+					spritePlayer.setPosition(580, 720);
+					UpdateBranches(score);
+					spriteLog.setPosition(810, 720);
+					logSpeedX = 5000;
+					logActive = true;
+					acceptInput = false;
+					chop.play();
+				}
+			}
 		}
 		if (!paused)
 		{
@@ -157,6 +217,7 @@ int main()
 				sf::FloatRect textRect = messageText.getLocalBounds();
 				messageText.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
 				messageText.setPosition(1920 / 2.f, 1080 / 2.f);
+				oot.play();
 			}
 
 			if (!beeActive)
@@ -237,6 +298,28 @@ int main()
 				}
 				else { branches[i].setPosition(3000, height); }
 			}
+			if (logActive)
+			{
+				spriteLog.setPosition(spriteLog.getPosition().x + (logSpeedX * deltaTime.asSeconds()),
+									  spriteLog.getPosition().y + (logSpeedY * deltaTime.asSeconds()));
+				if (spriteLog.getPosition().x < -100 || spriteLog.getPosition().x>2000)
+				{
+					logActive = false;
+					spriteLog.setPosition(810, 720);
+				}
+			}
+			if (branchPositions[5] == playerSide)
+			{
+				paused = true;
+				acceptInput = false;
+				spriteGrave.setPosition(525, 760);
+				spritePlayer.setPosition(2000, 660);
+				messageText.setString("You Died!");
+				sf::FloatRect textRect = messageText.getLocalBounds();
+				messageText.setOrigin(textRect.left + textRect.width / 2.f, textRect.top + textRect.height / 2.f);
+				messageText.setPosition(1920 / 2.f, 1080 / 2.f);
+				death.play();
+			}
 		}
 		window.clear(sf::Color(150, 150, 150, 255));
 		window.draw(sprtieBG);
@@ -245,10 +328,10 @@ int main()
 		window.draw(spriteCloud3); 
 		for (int i = 0; i < NUM_BRANCHES; i++) { window.draw(branches[i]); }
 		window.draw(spriteTree);
-		window.draw(spritePlayer);
+		window.draw(spritePlayer); 
 		window.draw(spriteAxe);
-		window.draw(spriteLog);
-		window.draw(spriteGrave);
+		window.draw(spriteLog); 
+		window.draw(spriteGrave); 
 		window.draw(spriteBee); 
 		window.draw(scoreText);
 		window.draw(timebar);
